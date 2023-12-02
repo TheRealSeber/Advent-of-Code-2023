@@ -33,7 +33,7 @@ Flamegraphs are great for identifying what's taking up time in a program!
 
 [cargo-flamegraph][cargo-flamegraph] will output an SVG that contains a flamegraph of the given program.
 
-# Some more notes made by Christopher
+# and some more marginal notes made by Christopher...
 
 ## Divan
 
