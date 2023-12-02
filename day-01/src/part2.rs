@@ -4,7 +4,7 @@ use crate::custom_error::AocError;
 pub fn process(
     input: &str,
 ) -> miette::Result<String, AocError> {
-    let num_str = vec!["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    let num_str = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
     Ok(input.lines().fold(0_i32, |acc, x| {
         let (mut l_dg,  mut r_dg) = (0_u8, 0_u8);
         for i in 0..x.len() {
@@ -20,9 +20,9 @@ pub fn process(
             }
             if let Ok(v) = x[i..i+1].parse::<u8>() {
                 if l_dg != 0 {
-                    r_dg = v as u8;
+                    r_dg = v;
                 } else {
-                    (l_dg, r_dg) = (v as u8, v as u8);
+                    (l_dg, r_dg) = (v, v);
                 }
             }
         }
