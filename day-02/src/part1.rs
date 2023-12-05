@@ -1,21 +1,41 @@
 use crate::custom_error::AocError;
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
-    let colors = vec![("red",12), ("green",13), ("blue", 14)];
+pub fn process(input: &str) -> miette::Result<String, AocError> {
+    let colors = vec![("red", 12), ("green", 13), ("blue", 14)];
     let mut successfull = true;
     let mut start_index = 0;
-    Ok(input.lines().enumerate().fold(0_i32, |acc , (game, x)| {
-        successfull = true;
-        let games = x[8+(game+1).ilog10() as usize..].split("; ").collect::<Vec<&str>>();
-        'outer: for game in games {
-            start_index = 0;
-            while let Some(end_index) = game[start_index..].find(',') {
+    Ok(input
+        .lines()
+        .enumerate()
+        .fold(0_i32, |acc, (game, x)| {
+            successfull = true;
+            let games = x[8 + (game + 1).ilog10() as usize..]
+                .split("; ")
+                .collect::<Vec<&str>>();
+            'outer: for game in games {
+                start_index = 0;
+                while let Some(end_index) = game[start_index..].find(',') {
+                    for (color, max_num) in &colors {
+                        if game[start_index..start_index + end_index].ends_with(color) {
+                            if let Ok(num) = game
+                                [start_index..start_index + end_index - color.len() - 1]
+                                .parse::<i32>()
+                            {
+                                if num > *max_num {
+                                    successfull = false;
+                                    break 'outer;
+                                }
+                            }
+                        }
+                    }
+                    start_index += end_index + 2;
+                }
                 for (color, max_num) in &colors {
-                    if game[start_index..start_index+end_index].ends_with(color) {
-                        if let Ok(num) = game[start_index..start_index+end_index-color.len() - 1].parse::<i32>() {
+                    if game[start_index..].ends_with(color) {
+                        if let Ok(num) =
+                            game[start_index..game.len() - color.len() - 1].parse::<i32>()
+                        {
                             if num > *max_num {
                                 successfull = false;
                                 break 'outer;
@@ -23,25 +43,14 @@ pub fn process(
                         }
                     }
                 }
-                start_index += end_index + 2;
             }
-            for (color, max_num) in &colors {
-                if game[start_index..].ends_with(color) {
-                    if let Ok(num) = game[start_index..game.len() - color.len() - 1].parse::<i32>() {
-                        if num > *max_num {
-                            successfull = false;
-                            break 'outer;
-                        }
-                    }
-                }
+            start_index = 0;
+            match successfull {
+                true => acc + game as i32 + 1,
+                false => acc,
             }
-        }
-        start_index = 0;
-        match successfull {
-            true => acc + game as i32 + 1,
-            false => acc
-        }
-    }).to_string())
+        })
+        .to_string())
 }
 
 #[cfg(test)]

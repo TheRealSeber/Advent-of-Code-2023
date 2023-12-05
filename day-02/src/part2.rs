@@ -7,47 +7,53 @@ struct Color<'a> {
 
 impl<'a> Color<'a> {
     fn new(name: &'a str) -> Self {
-        Self {
-            name,
-            max: 0
-        }
+        Self { name, max: 0 }
     }
 }
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
+pub fn process(input: &str) -> miette::Result<String, AocError> {
     let mut colors = vec![Color::new("red"), Color::new("green"), Color::new("blue")];
     let mut successfull = true;
     let mut start_index = 0;
-    Ok(input.lines().enumerate().fold(0_i32, |acc , (game, x)| {
-        (colors[0].max, colors[1].max, colors[2].max) = (0, 0, 0);
-        successfull = true;
-        let games = x[8+(game+1).ilog10() as usize..].split("; ").collect::<Vec<&str>>();
-        for game in games {
-            start_index = 0;
-            while let Some(end_index) = game[start_index..].find(',') {
+    Ok(input
+        .lines()
+        .enumerate()
+        .fold(0_i32, |acc, (game, x)| {
+            (colors[0].max, colors[1].max, colors[2].max) = (0, 0, 0);
+            successfull = true;
+            let games = x[8 + (game + 1).ilog10() as usize..]
+                .split("; ")
+                .collect::<Vec<&str>>();
+            for game in games {
+                start_index = 0;
+                while let Some(end_index) = game[start_index..].find(',') {
+                    for color in colors.iter_mut() {
+                        if game[start_index..start_index + end_index].ends_with(color.name) {
+                            if let Ok(num) = game
+                                [start_index..start_index + end_index - color.name.len() - 1]
+                                .parse::<i32>()
+                            {
+                                color.max = num.max(color.max)
+                            }
+                        }
+                    }
+                    start_index += end_index + 2;
+                }
                 for color in colors.iter_mut() {
-                    if game[start_index..start_index+end_index].ends_with(color.name) {
-                        if let Ok(num) = game[start_index..start_index+end_index-color.name.len() - 1].parse::<i32>() {
+                    if game[start_index..].ends_with(color.name) {
+                        if let Ok(num) =
+                            game[start_index..game.len() - color.name.len() - 1].parse::<i32>()
+                        {
                             color.max = num.max(color.max)
                         }
                     }
                 }
-                start_index += end_index + 2;
             }
-            for color in colors.iter_mut() {
-                if game[start_index..].ends_with(color.name) {
-                    if let Ok(num) = game[start_index..game.len() - color.name.len() - 1].parse::<i32>() {
-                        color.max = num.max(color.max)
-                    }
-                }
-            }
-        }
-        start_index = 0;
-        acc + colors[0].max * colors[1].max * colors[2].max
-    }).to_string())
+            start_index = 0;
+            acc + colors[0].max * colors[1].max * colors[2].max
+        })
+        .to_string())
 }
 
 #[cfg(test)]
