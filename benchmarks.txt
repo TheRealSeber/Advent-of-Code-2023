@@ -1,3 +1,5 @@
+* Laptop is: AMD Ryzen 9 5900HX 8-Core Processor, 16gb ram.
+
 day_01    fastest       │ slowest       │ median        │ mean          │ samples │ iters
 ├─ part1  33.29 µs      │ 60.89 µs      │ 33.89 µs      │ 35.89 µs      │ 100     │ 100
 ╰─ part2  161.2 µs      │ 270.2 µs      │ 162.2 µs      │ 171.9 µs      │ 100     │ 100
@@ -19,3 +21,8 @@ day_05    fastest       │ slowest       │ median        │ mean          �
 day_06    fastest       │ slowest       │ median        │ mean          │ samples │ iters
 ├─ part1  1.099 µs      │ 18.39 µs      │ 1.199 µs      │ 1.49 µs       │ 100     │ 100
 ╰─ part2  51.32 ms      │ 62.38 ms      │ 56.21 ms      │ 55.12 ms      │ 100     │ 100
+
+Note: Part 1 uses BTreeMap, Part 2 uses Vec
+day_07    fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1  546.6 µs      │ 1.142 ms      │ 644.9 µs      │ 641.1 µs      │ 100     │ 100
+╰─ part2  425.2 µs      │ 851.8 µs      │ 479.5 µs      │ 499.2 µs      │ 100     │ 100
