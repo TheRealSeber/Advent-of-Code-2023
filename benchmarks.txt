@@ -26,3 +26,7 @@ Note: Part 1 uses BTreeMap, Part 2 uses Vec
 day_07    fastest       │ slowest       │ median        │ mean          │ samples │ iters
 ├─ part1  546.6 µs      │ 1.142 ms      │ 644.9 µs      │ 641.1 µs      │ 100     │ 100
 ╰─ part2  425.2 µs      │ 851.8 µs      │ 479.5 µs      │ 499.2 µs      │ 100     │ 100
+
+day_08    fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1  979.4 µs      │ 1.818 ms      │ 1.044 ms      │ 1.13 ms       │ 100     │ 100
+╰─ part2  4.928 ms      │ 7.794 ms      │ 5.224 ms      │ 5.868 ms      │ 100     │ 100
