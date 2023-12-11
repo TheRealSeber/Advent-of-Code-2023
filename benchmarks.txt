@@ -1,4 +1,4 @@
-* Laptop is: AMD Ryzen 9 5900HX 8-Core Processor, 16gb ram.
+* Laptop is: AMD Ryzen 9 5900HX 8-Core Processor, 16gb RAM.
 
 day_01    fastest       │ slowest       │ median        │ mean          │ samples │ iters
 ├─ part1  33.29 µs      │ 60.89 µs      │ 33.89 µs      │ 35.89 µs      │ 100     │ 100
@@ -37,3 +37,7 @@ day_09    fastest       │ slowest       │ median        │ mean          �
 
 day_10    fastest       │ slowest       │ median        │ mean          │ samples │ iters
 ╰─ part1  946.5 µs      │ 1.722 ms      │ 974.9 µs      │ 1.103 ms      │ 100     │ 100
+
+day_11    fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1  258.6 µs      │ 321 µs        │ 259.6 µs      │ 262.8 µs      │ 100     │ 100
+╰─ part2  310 µs        │ 573.5 µs      │ 312.7 µs      │ 342.3 µs      │ 100     │ 100
