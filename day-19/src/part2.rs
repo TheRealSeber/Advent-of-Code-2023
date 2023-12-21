@@ -42,26 +42,35 @@ enum Rule<'a> {
 }
 #[derive(Copy, Clone, Debug)]
 struct RatingRanges {
-    x: (u32, u32),
-    m: (u32, u32),
-    a: (u32, u32),
-    s: (u32, u32),
+    x: (u64, u64),
+    m: (u64, u64),
+    a: (u64, u64),
+    s: (u64, u64),
 }
 
 impl RatingRanges {
-    fn sum(&self) -> u32 {
-        (self.x.1 - self.x.0)
-            * (self.m.1 - self.m.0)
-            * (self.a.1 - self.a.0)
-            * (self.s.1 - self.s.0)
+    fn sum(&self) -> u64 {
+        (self.x.1 - self.x.0 + 1)
+            * (self.m.1 - self.m.0 + 1)
+            * (self.a.1 - self.a.0 + 1)
+            * (self.s.1 - self.s.0 + 1)
     }
 
-    fn get_part_value(&mut self, part: &Part) -> &mut (u32, u32) {
+    fn adjust_high_range(&mut self, part: &Part, value: u64) {
         match part {
-            Part::Xtremly => &mut self.x,
-            Part::Musical => &mut self.m,
-            Part::Aerodynamic => &mut self.a,
-            Part::Shiny => &mut self.s,
+            Part::Xtremly => self.x.1 = value,
+            Part::Musical => self.m.1 = value,
+            Part::Aerodynamic => self.a.1 = value,
+            Part::Shiny => self.s.1 = value,
+        }
+    }
+
+    fn adjust_low_range(&mut self, part: &Part, value: u64) {
+        match part {
+            Part::Xtremly => self.x.0 = value,
+            Part::Musical => self.m.0 = value,
+            Part::Aerodynamic => self.a.0 = value,
+            Part::Shiny => self.s.0 = value,
         }
     }
 }
@@ -136,21 +145,20 @@ fn parse_workflows(input: &str) -> IResult<&str, HashMap<&str, Vec<Rule<'_>>>> {
 }
 
 fn parse_input(input: &str) -> IResult<&str, HashMap<&str, Vec<Rule>>> {
-    let (_, workflows_input) = take_until("\n\n").parse(input)?;
+    let (_, workflows_input) = alt((take_until("\r\n\r\n"), take_until("\n\n"))).parse(input)?;
 
     let (input, workflows) = parse_workflows(workflows_input)?;
     Ok((input, workflows))
 }
 
 fn get_ranges<'a>(
-    res: &mut u32,
+    res: &mut u64,
     mut range: RatingRanges,
     map: &'a HashMap<&str, Vec<Rule<'a>>>,
     current_place: Destination,
 ) {
     if let Destination::Workflow(next_destination) = current_place {
         let rules = map.get(next_destination).expect("Shuld exist");
-        dbg!(&rules);
         rules.iter().for_each(|rule| match rule {
             Rule::Test {
                 part,
@@ -158,23 +166,21 @@ fn get_ranges<'a>(
                 condition,
                 value,
             } => {
-                let rating_part_range = range.get_part_value(part);
+                let mut new_rating_range = range;
                 match condition {
                     Condition::Greater => {
-                        rating_part_range.0 = *value;
-                        if rating_part_range.0 < rating_part_range.1 {
-                            get_ranges(res, range.clone(), map, target.clone());
-                        }
+                        new_rating_range.adjust_low_range(part, *value as u64 + 1);
+                        range.adjust_high_range(part, *value as u64);
+                        get_ranges(res, new_rating_range, map, *target);
                     }
                     Condition::Lower => {
-                        rating_part_range.1 = *value;
-                        if rating_part_range.0 > rating_part_range.1 {
-                            get_ranges(res, range.clone(), map, target.clone());
-                        }
+                        new_rating_range.adjust_high_range(part, *value as u64 - 1);
+                        range.adjust_low_range(part, *value as u64);
+                        get_ranges(res, new_rating_range, map, *target);
                     }
                 }
             }
-            Rule::Target(destination) => get_ranges(res, range, map, destination.clone()),
+            Rule::Target(destination) => get_ranges(res, range, map, *destination),
         });
     } else if current_place == Destination::Accepted {
         *res += range.sum();
@@ -190,7 +196,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         a: (1, 4000),
         s: (1, 4000),
     };
-    let mut res = 0_u32;
+    let mut res = 0_u64;
     get_ranges(&mut res, ranges, &workflows, Destination::Workflow("in"));
     Ok(res.to_string())
 }
