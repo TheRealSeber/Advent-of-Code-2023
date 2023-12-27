@@ -1,6 +1,8 @@
 # Advent of Code 2023
 
-**Personally** I took up this challange to get the hang of such things as **benchmarking, testing, memory saving habits and outperformancing as much as I could** in which I would like to be pro-efficient in the future. 
+**Personally** I took up this challange to get the hang of such things as **benchmarking, testing, memory saving habits and outperformancing as much as I could** in which I would like to be proficient in the future. Also I wanted to get fluent in writing Rust code
+
+![Personal times](personal_times.png)
 
 This year [Christopher](https://github.com/ChristopherBiscardi/advent-of-code/tree/main/2023/rust) has pre-set up a series of functionality for testing, benchmarking, and otherwise evaluating the performance of our Rust programs.
 
@@ -25,19 +27,15 @@ just create <day>
 
 Just is used to partially document all tasks, so you (the person reading this) can see what commands we were running and perhaps run them yourself on your own codebase.
 
-I also thought it would be neat to maybe have scripts that run flamegraphs for all of the days and parts easily, so that they could be checked in and viewable on github and generally make it easier to run and document the running of various tools.
-
 ## cargo-flamegraph
 
 Flamegraphs are great for identifying what's taking up time in a program!
 
-[cargo-flamegraph][cargo-flamegraph] will output an SVG that contains a flamegraph of the given program.
-
-# and some more marginal notes made by Christopher...
+[cargo-flamegraph][cargo-flamegraph] will output an SVG that contains a flamegraph of the given program. They are available in the **flamegraph** directory
 
 ## Divan
 
-I don't have a strong reason for using [Divan over criterion][divan:compared-to-criterion] other than to get to know the crate a bit better.
+No strong reason for using [Divan over criterion][divan:compared-to-criterion] other than to get to know the crate a bit better.
 
 You can learn more about Divan in the [announcement post][divan-announcement].
 
